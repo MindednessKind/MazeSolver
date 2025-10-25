@@ -1,0 +1,43 @@
+# Include the README
+include README.md
+
+# Include the license file
+include LICENSE
+
+# Include all Python files in the package
+recursive-include maze_solver *.py
+
+# Include example files
+recursive-include examples *.py
+
+# Include documentation files
+include *.md
+include *.txt
+include *.rst
+
+# Include configuration files
+include setup.py
+include setup.cfg
+include pyproject.toml
+
+# Exclude compiled Python files
+global-exclude *.pyc
+global-exclude __pycache__
+global-exclude *.pyo
+global-exclude *.pyd
+global-exclude .DS_Store
+global-exclude *.so
+
+# Exclude development files
+global-exclude .git*
+global-exclude .pytest_cache
+global-exclude .mypy_cache
+global-exclude .tox
+global-exclude .coverage
+global-exclude htmlcov
+
+# Exclude IDE files
+global-exclude .vscode
+global-exclude .idea
+global-exclude *.swp
+global-exclude *.swo
