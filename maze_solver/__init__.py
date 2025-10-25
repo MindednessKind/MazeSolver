@@ -76,8 +76,8 @@ def quick_solve(maze_string, symbols=None, code=None, size=None):
     示例:
     >>> result = quick_solve("*00100001000010000#")
     >>> print(result["encoded_path"])
-    """  
-    
+    """
+
     if size is None:
         maze = create_square_maze_from_string(maze_string)
     else:
@@ -91,14 +91,14 @@ def quick_solve(maze_string, symbols=None, code=None, size=None):
                 else:
                     row.append("0")  # 默认填充道路
             maze.append(row)
-    
+
     solver = MazeSolver()
     solver.set_maze(maze)
     if symbols is not None:
         solver.set_symbols(symbols)
     if code is not None:
         solver.set_code(code)
-        
+
     solver.solve_and_show()
     return solver
 

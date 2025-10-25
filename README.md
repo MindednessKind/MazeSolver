@@ -14,26 +14,20 @@
 
 ## 安装
 
-### 方式1：使用 pip 安装（推荐）
+### 方式1: 从源码安装 (推荐)
 
-```bash
-pip install maze-solver
-```
-
-### 方式2：从源码安装
-
-```bash
-git clone https://github.com/yourusername/maze-solver.git
-cd maze-solver
+```bash 
+git clone https://github.com/MindednessKind/MazeSolver.git
+cd MazeSolver
 pip install -e .
 ```
 
-### 方式3：开发模式安装
+### 方式2: setuptools 安装
 
 ```bash
-git clone https://github.com/yourusername/maze-solver.git
-cd maze-solver
-pip install -e .[dev]
+git clone https://github.com/MindednessKind/MazeSolver.git
+cd MazeSolver
+python ./setup.py
 ```
 
 ## 快速开始
