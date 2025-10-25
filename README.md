@@ -48,36 +48,17 @@ maze = [
 
 # 创建求解器并求解
 solver = MazeSolver()
-result = solver.bfs_solve(maze)
+result = solver.solve_and_show(maze)
 
-if result["found"]:
-    print(f"找到路径: {result['encoded_path']}")
-    print(f"路径长度: {result['length']} 个位置")
-    print(f"移动步数: {result['steps']} 步")
-else:
-    print("未找到路径")
 ```
 
 ### 便捷函数
 
 ```python
-from maze_solver import solve_maze, print_maze_with_path
+from maze_solver import quick_solve
 
 # 一行代码求解迷宫
-result = solve_maze(maze)
-print(f"路径: {result['encoded_path']}")
-
-# 显示迷宫和路径
-print_maze_with_path(maze, result["path"])
-```
-
-### 美化显示
-
-```python
-from maze_solver import showMaze
-
-# 美化显示迷宫（带箭头指示）
-showMaze(maze, result["movement"])
+quick_solve(maze)
 ```
 
 ## 详细功能
@@ -85,6 +66,7 @@ showMaze(maze, result["movement"])
 ### 1. 自定义方向编码
 
 ```python
+from maze_solver import MazeSolver
 solver = MazeSolver()
 
 # 设置不同的编码方案
@@ -93,8 +75,7 @@ solver.set_code("W", "S", "A", "D")  # WASD游戏
 solver.set_code("上", "下", "左", "右")  # 中文
 solver.set_code("N", "S", "W", "E")  # 罗盘方向
 
-result = solver.bfs_solve(maze)
-print(f"自定义编码路径: {result['encoded_path']}")
+
 ```
 
 ### 2. 自定义迷宫符号
@@ -128,35 +109,14 @@ solver.show(result["movement"])  # 显示结果
 ### 4. 从字符串创建迷宫
 
 ```python
-from maze_solver import create_maze_from_string
+from maze_solver import create_square_maze_from_string, solve_maze
 
 # 从字符串创建正方形迷宫
 maze_string = "*000100001000010000#"  # 5x5迷宫
-maze = create_maze_from_string(maze_string)
+maze = create_square_maze_from_string(maze_string)
+maze_string2 = "*0010011100110100#"  # 3x6迷宫
+maze2 = create_rectangle_maze_from_string(maze_string2)
 result = solve_maze(maze)
-```
-
-### 5. 统计信息
-
-```python
-result = solver.bfs_solve(maze)
-solver.print_statistics()
-
-# 输出:
-# 求解统计信息:
-#   路径找到: 是
-#   路径长度: 9 个位置
-#   移动步数: 8 步
-#   编码路径: RRRDDLDD
-#   访问格子: 15 / 25
-#   覆盖率: 60.0%
-```
-
-### 6. 一体化求解和显示
-
-```python
-# 求解并立即显示结果
-solver.solve_and_show(maze)
 ```
 
 ## API 参考

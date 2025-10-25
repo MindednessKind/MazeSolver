@@ -38,18 +38,19 @@ from .utils import (
     create_square_maze_from_string,
     create_rectangle_maze_from_string,
     create_rectangle_maze_from_dimensions,
-    solve_maze,
 )
+from .structs import Code, Symbols
 
 # 定义包的公共API
 __all__ = [
     "MazeSolver",
+    "Code",
+    "Symbols",
     "print_maze_with_path",
     "showMaze",
-    "create_maze_from_string",
+    "create_square_maze_from_string",
     "create_rectangle_maze_from_string",
     "create_rectangle_maze_from_dimensions",
-    "solve_maze",
 ]
 
 # 版本信息
@@ -95,9 +96,11 @@ def quick_solve(maze_string, symbols=None, code=None, size=None):
     solver = MazeSolver()
     solver.set_maze(maze)
     if symbols is not None:
-        solver.set_symbols(symbols)
+        (road, wall, start, end) = symbols
+        solver.set_symbols(road, wall, start, end)
     if code is not None:
-        solver.set_code(code)
+        (up, down, left, right) = code
+        solver.set_code(up, down, left, right)
 
     solver.solve_and_show()
     return solver
@@ -119,21 +122,7 @@ def demo():
         ["0", "0", "0", "0", "0"],
     ]
 
-    print("演示迷宫:")
-    print_maze_with_path(maze)
-
-    print("\n求解结果:")
-    result = solve_maze(maze)
-
-    if result["found"]:
-        print(f"✓ 找到路径: {result['encoded_path']}")
-        print(f"路径长度: {result['length']} 位置")
-        print(f"移动步数: {result['steps']} 步")
-
-        print("\n美化显示:")
-        showMaze(maze, result["movement"])
-    else:
-        print("✗ 未找到路径")
+    quick_solve(maze)
 
     print("\n使用自定义编码:")
     solver = MazeSolver()

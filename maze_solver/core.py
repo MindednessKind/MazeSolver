@@ -1,5 +1,4 @@
 from collections import deque
-import math
 from typing import List, Dict, Tuple, Optional, Union
 
 
@@ -25,59 +24,119 @@ class MazeSolver:
         self.codes = {"up": "U", "down": "D", "left": "L", "right": "R"}
         self.symbols = {"road": "0", "wall": "1", "start": "*", "end": "#"}
         self.decode = {
-            (0, -1) : "←",
-            (0, 1) : "→",
-            (1, 0) : "↓",
-            (-1, 0) : "↑",
+            (0, -1): "←",
+            (0, 1): "→",
+            (1, 0): "↓",
+            (-1, 0): "↑",
         }
 
-    def set_code(self, up: str, down: str, left: str, right: str) -> None:
+    def set_code(
+        self,
+        up: Union[str, "Code"],
+        down: Optional[str] = None,
+        left: Optional[str] = None,
+        right: Optional[str] = None,
+    ) -> None:
         """
         设置方向编码
 
         参数:
-        up (str): 向上移动的编码
-        down (str): 向下移动的编码
-        left (str): 向左移动的编码
-        right (str): 向右移动的编码
+        up (Union[str, Code]): 向上移动的编码或Code结构体
+        down (Optional[str]): 向下移动的编码
+        left (Optional[str]): 向左移动的编码
+        right (Optional[str]): 向右移动的编码
 
         异常:
         ValueError: 如果编码参数不是字符串或为空
+
+        使用方式:
+        1. solver.set_code("w", "s", "a", "d")
+        2. solver.set_code(code_struct)  # Code结构体
+        3. (up, down, left, right) = code_struct; solver.set_code(up, down, left, right)
         """
-        if not all(isinstance(code, str) and code for code in [up, down, left, right]):
+        # 如果第一个参数是Code结构体，则解包使用
+        if hasattr(up, "__iter__") and hasattr(up, "up") and hasattr(up, "down"):
+            # 这是一个Code结构体
+            up_val, down_val, left_val, right_val = up
+        else:
+            # 传统的四个参数方式
+            if any(param is None for param in [down, left, right]):
+                raise ValueError("当使用字符串参数时，必须提供所有四个方向编码")
+            up_val, down_val, left_val, right_val = up, down, left, right
+
+        if not all(
+            isinstance(code, str) and code
+            for code in [up_val, down_val, left_val, right_val]
+        ):
             raise ValueError("所有方向编码必须是非空字符串")
 
         # 检查是否有重复编码
-        codes = [up, down, left, right]
+        codes = [up_val, down_val, left_val, right_val]
         if len(set(codes)) != len(codes):
             raise ValueError("方向编码不能重复")
 
-        self.codes = {"up": up, "down": down, "left": left, "right": right}
+        self.codes = {
+            "up": up_val,
+            "down": down_val,
+            "left": left_val,
+            "right": right_val,
+        }
 
-    def set_symbols(self, road: str, wall: str, start: str, end: str) -> None:
+    def set_symbols(
+        self,
+        road: Union[str, "Symbols"],
+        wall: Optional[str] = None,
+        start: Optional[str] = None,
+        end: Optional[str] = None,
+    ) -> None:
         """
         设置迷宫符号
 
         参数:
-        road (str): 道路符号
-        wall (str): 墙壁符号
-        start (str): 起点符号
-        end (str): 终点符号
+        road (Union[str, Symbols]): 道路符号或Symbols结构体
+        wall (Optional[str]): 墙壁符号
+        start (Optional[str]): 起点符号
+        end (Optional[str]): 终点符号
 
         异常:
         ValueError: 如果符号参数不是字符串或为空
+
+        使用方式:
+        1. solver.set_symbols(" ", "█", "S", "E")
+        2. solver.set_symbols(symbols_struct)  # Symbols结构体
+        3. (road, wall, start, end) = symbols_struct; solver.set_symbols(road, wall, start, end)
         """
+        # 如果第一个参数是Symbols结构体，则解包使用
+        if (
+            hasattr(road, "__iter__")
+            and hasattr(road, "road")
+            and hasattr(road, "wall")
+        ):
+            # 这是一个Symbols结构体
+            road_val, wall_val, start_val, end_val = road
+        else:
+            # 传统的四个参数方式
+            if any(param is None for param in [wall, start, end]):
+                raise ValueError("当使用字符串参数时，必须提供所有四个符号")
+            road_val, wall_val, start_val, end_val = road, wall, start, end
+
         if not all(
-            isinstance(symbol, str) and symbol for symbol in [road, wall, start, end]
+            isinstance(symbol, str) and symbol
+            for symbol in [road_val, wall_val, start_val, end_val]
         ):
             raise ValueError("所有符号必须是非空字符串")
 
         # 检查是否有重复符号
-        symbols = [road, wall, start, end]
+        symbols = [road_val, wall_val, start_val, end_val]
         if len(set(symbols)) != len(symbols):
             raise ValueError("迷宫符号不能重复")
 
-        self.symbols = {"road": road, "wall": wall, "start": start, "end": end}
+        self.symbols = {
+            "road": road_val,
+            "wall": wall_val,
+            "start": start_val,
+            "end": end_val,
+        }
 
     def get_symbols(self) -> Dict[str, str]:
         """
@@ -496,9 +555,9 @@ class MazeSolver:
         showMaze(maze, None, road_symbol, wall_symbol, start_symbol, end_symbol)
 
         if result["found"]:
-            print( "\n✓ 找到路径! ")
-            tmp = "".join( [self.decode[move] for move in result['path'] ] )
-            print(f"未编码路线: { tmp }")
+            print("\n✓ 找到路径! ")
+            tmp = "".join([self.decode[move] for move in result["path"]])
+            print(f"未编码路线: {tmp}")
             print(f"编码后路线: {result['encoded_path']}")
             print("解决方案:")
             showMaze(
@@ -688,140 +747,3 @@ def showMaze(
         for cell in row:
             display_row.append(symbol_map.get(cell, cell))
         print("".join(display_row))
-
-
-def create_maze_from_string(input_string: str) -> List[List[str]]:
-    """
-    将字符串转换为正方形迷宫
-
-    参数:
-    input_string (str): 输入字符串
-
-    返回:
-    List[List[str]]: 二维迷宫数组
-
-    异常:
-    ValueError: 如果字符串长度不是完全平方数
-    """
-    if not isinstance(input_string, str):
-        raise TypeError("输入必须是字符串")
-
-    if not input_string:
-        raise ValueError("输入字符串不能为空")
-
-    length = int(math.sqrt(len(input_string)))
-    if length * length != len(input_string):
-        raise ValueError(
-            f"字符串长度 {len(input_string)} 不是完全平方数，无法形成正方形迷宫"
-        )
-
-    maze = []
-    for i in range(length):
-        row = []
-        for j in range(length):
-            index = i * length + j
-            row.append(input_string[index])
-        maze.append(row)
-
-    return maze
-
-
-# 示例和测试
-if __name__ == "__main__":
-    # 示例1: 从字符串创建迷宫
-    print("=== 示例1: 从字符串创建的迷宫 ===")
-    input_str = "*11110100001010000101111#"
-    try:
-        maze = create_maze_from_string(input_str)
-        print("原始迷宫:")
-        print_maze_with_path(maze)
-
-        solver = MazeSolver()
-        result = solver.bfs_solve(maze, "0", "1", "*", "#")
-
-        if result["found"]:
-            print( "\n✓ 找到最短路径!")
-            print(f"编码路径: {result['encoded_path']}")
-            print("\n带路径的迷宫 (·表示路径):")
-            print_maze_with_path(maze, result["movement"])
-            solver.print_statistics()
-        else:
-            print("\n✗ 未找到从入口到出口的路径")
-            solver.print_statistics()
-
-    except Exception as e:
-        print(f"错误: {e}")
-
-    print("\n" + "=" * 50)
-
-    # 示例2: 使用MazeSolver类
-    print("示例2: 使用MazeSolver类")
-
-    solver = MazeSolver()
-
-    print("使用不同编码获取路径:")
-    print(f"默认编码 (U/D/L/R): {solver.encode_path(maze)}")
-
-    solver.set_code("W", "S", "A", "D")
-    print(f"WASD编码: {solver.encode_path(maze)}")
-
-    solver.set_code("↑", "↓", "←", "→")
-    print(f"箭头编码: {solver.encode_path(maze)}")
-
-    solver.set_code("上", "下", "左", "右")
-    print(f"中文编码: {solver.encode_path(maze)}")
-
-    solver.set_code("F", "B", "L", "R")
-    print(f"机器人编码: {solver.encode_path(maze)}")
-
-    print("\n" + "=" * 50)
-
-    # 示例3: 手动创建的迷宫
-    maze2 = [
-        ["S", "0", "1", "0", "E"],
-        ["1", "0", "1", "0", "1"],
-        ["0", "0", "0", "0", "0"],
-        ["1", "1", "1", "1", "0"],
-        ["0", "0", "0", "0", "0"],
-    ]
-
-    print("示例3: 手动创建的迷宫")
-    print("原始迷宫:")
-    print_maze_with_path(maze2)
-
-    solver.set_code("W", "S", "A", "D")
-    result2 = solver.bfs_solve(maze2, "0", "1", "S", "E")
-
-    if result2["found"]:
-        print(f"\nWASD路径: {result2['encoded_path']}")
-        print("\n带路径的迷宫 (·表示路径):")
-        print_maze_with_path(maze2, result2["movement"])
-        solver.print_statistics()
-
-    print("\n" + "=" * 50)
-
-    # 示例4: 错误处理
-    print("示例4: 错误处理测试")
-
-    try:
-        # 测试重复编码
-        solver.set_code("A", "A", "B", "C")
-    except ValueError as e:
-        print(f"捕获到预期错误: {e}")
-
-    try:
-        # 测试无效迷宫
-        invalid_maze = [["*", "1"], ["0"]]  # 行长度不一致
-        solver.bfs_solve(invalid_maze)
-    except ValueError as e:
-        print(f"捕获到预期错误: {e}")
-
-    print("\n" + "=" * 60)
-    print("MazeSolver使用说明:")
-    print("1. 创建求解器: solver = MazeSolver()")
-    print("2. 设置编码: solver.set_code(up, down, left, right)")
-    print("3. 求解迷宫: result = solver.bfs_solve(maze, road, wall, start, end)")
-    print("4. 快速获取编码路径: solver.encode_path(maze, road, wall, start, end)")
-    print("5. 查看统计信息: solver.print_statistics()")
-    print("6. 支持任意字符编码：字母、数字、符号、表情、中文等")
-    print("7. 应用场景：游戏控制、机器人导航、路径压缩存储等")

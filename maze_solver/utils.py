@@ -364,32 +364,3 @@ def create_rectangle_maze_from_dimensions(
     return maze
 
 
-# 便捷函数
-def solve_maze(
-    maze: List[List[str]],
-    road_symbol: str = "0",
-    wall_symbol: str = "1",
-    start_symbol: str = "*",
-    end_symbol: str = "#",
-    direction_codes: Optional[Dict[str, str]] = None,
-) -> Dict:
-    """
-    便捷函数：一次性求解迷宫
-
-    参数:
-    maze: 迷宫数组
-    road_symbol: 道路符号
-    wall_symbol: 墙壁符号
-    start_symbol: 起点符号
-    end_symbol: 终点符号
-    direction_codes: 方向编码字典
-
-    返回:
-    Dict: 求解结果
-    """
-    from .core import MazeSolver
-
-    solver = MazeSolver()
-    if direction_codes:
-        solver.codes = direction_codes
-    return solver.bfs_solve(maze, road_symbol, wall_symbol, start_symbol, end_symbol)

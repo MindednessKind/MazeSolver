@@ -1,8 +1,8 @@
 from maze_solver import (
     MazeSolver,
     print_maze_with_path,
-    create_maze_from_string,
-    solve_maze,
+    create_square_maze_from_string,
+    quick_solve,
     showMaze,
 )
 
@@ -30,7 +30,7 @@ def demo_basic_usage():
     result = solver.bfs_solve(maze)
 
     if result["found"]:
-        print(f"\n✓ 找到路径!")
+        print( "\n✓ 找到路径!")
         print(f"默认编码路径: {result['encoded_path']}")
         print("\n路径可视化:")
         print_maze_with_path(maze, result["movement"])
@@ -77,7 +77,7 @@ def demo_set_symbols():
     solver.set_symbols(".", "X", "S", "E")
     solver.set_code("↑", "↓", "←", "→")
 
-    print(f"\n更改符号设置:")
+    print( "\n更改符号设置:")
     print(f"符号配置: {solver.get_symbols()}")
     print(f"编码配置: {solver.get_codes()}")
 
@@ -200,7 +200,7 @@ def demo_string_maze():
     input_string = "*000010000100001000010000#"  # 5x5 迷宫
 
     try:
-        maze = create_maze_from_string(input_string)
+        maze = create_square_maze_from_string(input_string)
         print("从字符串创建的迷宫:")
         print_maze_with_path(maze)
 
@@ -249,7 +249,7 @@ def demo_complex_maze():
     result = solver.bfs_solve(complex_maze)
 
     if result["found"]:
-        print(f"\n✓ 找到解决方案!")
+        print( "\n✓ 找到解决方案!")
         print(f"路径编码: {result['encoded_path']}")
         print(f"路径长度: {result['length']} 个位置")
         print(f"移动步数: {result['steps']} 步")
@@ -316,7 +316,7 @@ def demo_error_handling():
 
     print("\n测试4: 无效字符串迷宫")
     try:
-        create_maze_from_string("*00100#")  # 长度不是完全平方数
+        create_square_maze_from_string("*00100#")  # 长度不是完全平方数
     except ValueError as e:
         print(f"✓ 捕获预期错误: {e}")
 
@@ -349,11 +349,10 @@ def demo_convenience_functions():
     print_maze_with_path(maze)
 
     # 使用便捷函数
-    custom_codes = {"up": "↗", "down": "↘", "left": "↖", "right": "↙"}
-    result = solve_maze(maze, direction_codes=custom_codes)
+    result = quick_solve(maze)
 
     if result["found"]:
-        print(f"\n使用便捷函数求解:")
+        print( "\n使用便捷函数求解:")
         print(f"自定义编码路径: {result['encoded_path']}")
         print("路径可视化:")
         print_maze_with_path(maze, result["movement"])
@@ -367,7 +366,7 @@ def demo_advanced_features():
 
     # 创建一个较大的迷宫
     large_input = "*" + "0" * 8 + "1" * 8 + "0" * 7 + "#"  # 5x5
-    maze = create_maze_from_string(large_input)
+    maze = create_square_maze_from_string(large_input)
 
     print("大型迷宫:")
     print_maze_with_path(maze)
