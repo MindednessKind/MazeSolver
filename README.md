@@ -351,7 +351,7 @@ MIT License - 详见 [LICENSE](LICENSE) 文件
 
 ## 联系方式
 
-- 作者：MazeSolver Developer
-- 邮箱：developer@example.com
+- 作者：Mindedness
+- 邮箱：FallenMind1020@outlook.com
 - 项目主页：https://github.com/yourusername/maze-solver
 - 问题报告：https://github.com/yourusername/maze-solver/issues

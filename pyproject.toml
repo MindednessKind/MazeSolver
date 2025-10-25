@@ -9,10 +9,10 @@ description = "A comprehensive maze solving package with BFS algorithm and path 
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
-    {name = "MazeSolver Developer", email = "developer@example.com"}
+    {name = "Mindedness", email = "FallenMind1020@outlook.com"}
 ]
 maintainers = [
-    {name = "MazeSolver Developer", email = "developer@example.com"}
+    {name = "Mindednessr", email = "FallenMind1020@outlook.com"}
 ]
 keywords = [
     "maze",
