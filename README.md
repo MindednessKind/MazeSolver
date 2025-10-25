@@ -75,6 +75,7 @@ solver.set_code("W", "S", "A", "D")  # WASD游戏
 solver.set_code("上", "下", "左", "右")  # 中文
 solver.set_code("N", "S", "W", "E")  # 罗盘方向
 
+solver.solve_and_show()
 
 ```
 
@@ -93,7 +94,7 @@ custom_maze = [
 result = solver.bfs_solve(custom_maze)
 ```
 
-### 3. 预设迷宫和便捷方法
+### 3. 预设迷宫
 
 ```python
 solver = MazeSolver()
@@ -143,12 +144,17 @@ result = solve_maze(maze)
 
 ### 工具函数
 
-- `solve_maze(maze, ...)` - 便捷求解函数
+- `quick_solve(maze, ...)` - 便捷求解函数
 - `print_maze_with_path(maze, path)` - 打印迷宫和路径
 - `showMaze(maze, path)` - 美化显示迷宫
-- `create_maze_from_string(string)` - 从字符串创建正方形迷宫
+- `create_square_maze_from_string(string)` - 从字符串创建正方形迷宫
 - `create_rectangle_maze_from_string(string, width, height, padding_char)` - 创建矩形迷宫
 - `create_rectangle_maze_from_dimensions(string, width, height, fill_mode, padding_char)` - 多种填充模式的矩形迷宫
+
+### 数据结构
+
+- `Code(up, ...)` - 存储方向编码
+- `Symbols(road, ...)` - 存储迷宫符号
 
 ### 返回结果格式
 
